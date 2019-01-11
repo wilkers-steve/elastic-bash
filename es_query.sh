@@ -44,7 +44,7 @@ query="$query$filters"
 
 if [ "$field" == "log" ]; then
   curl -gv "${uri}/_search?size=${num}" -H"Content-Type: application/json" -d"${query}" \
-  | python3 -c "import sys, json; results=json.load(sys.stdin);hits=results['hits']['hits'];logs=[result['_source']['log'] for result in hits];print(*logs, sep='\n')"
+  | python3 -c "import sys, json; results=json.load(sys.stdin);hits=results['hits']['hits'];logs=[(result['_source']['kubernetes']['host']+' | '+result['_source']['kubernetes']['pod_name']+' | '+result['_source']['log']) for result in hits];print(*logs, sep='\n')"
 elif [ "$field" == "message" ]; then
   curl -gv "${uri}/_search?size=${num}" -H"Content-Type: application/json" -d"${query}" \
   | python3 -c "import sys, json; results=json.load(sys.stdin);hits=results['hits']['hits'];logs=[result['_source']['message'] for result in hits];print(*logs, sep='\n')"
